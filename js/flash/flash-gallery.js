@@ -1,7 +1,3 @@
-// autoplay - true/false 
-// time - very-fast/fast/normal/slow/very-slow or any number
-// columns 2/3/4/5
-// circles true/false 
 
 function flashGallery(el, settings = {
 	autoplay: false,
@@ -409,33 +405,36 @@ function flashGallery(el, settings = {
 	
 	function dragElement(elmnt) {
 
-		var defaultPos = 0;
-
-		var defaultTranslateX;
+		var defaultPos = 0, defaultTranslateX, lastClientX;
 
 		elmnt.onmousedown = dragMouseDown;
+		elmnt.ontouchstart = dragMouseDown;
 
 		function dragMouseDown(e) {
 
-		defaultTranslateX = elmnt.style.transform;
-		defaultTranslateX = defaultTranslateX.slice(11, defaultTranslateX.length - 1);
-
-		elmnt.onmousedown = dragMouseDown;
+			defaultTranslateX = elmnt.style.transform;
+			defaultTranslateX = defaultTranslateX.slice(11, defaultTranslateX.length - 1);
 
 			e = e || window.event;
 			e.preventDefault();
-			defaultPos = e.clientX;
+
+			defaultPos = e.clientX || e.touches[0].clientX;
+			
 			document.onmouseup = closeDragElement;
+			document.ontouchend = closeDragElement;
+
 			document.onmousemove = elementDrag;
+			document.ontouchmove = elementDrag;
 
 		}
 
 		function elementDrag(e) {
 
 			e = e || window.event;
-			e.preventDefault();
-			pos = e.clientX - defaultPos;
+			pos = e.clientX || e.touches[0].clientX;
+			pos -= defaultPos;
 			elmnt.style.transform = "translateX(calc("+defaultTranslateX+" + "+pos+"px)"; 
+			lastClientX = e.clientX || e.touches[0].clientX;
 
 		}
 
@@ -444,12 +443,12 @@ function flashGallery(el, settings = {
 			e = e || window.event;
 			e.preventDefault();
 
-			if (e.clientX < defaultPos - 80) { 
+			if (lastClientX < defaultPos - 80) { 
 				if (index == 0) elmnt.style.transform = "translateX("+defaultTranslateX+")";
 				else nextBtn.click();
 			}
 
-			else if (e.clientX > defaultPos + 80) { 
+			else if (lastClientX > defaultPos + 80) { 
 				if (prevIndex == lastIndex) elmnt.style.transform = "translateX(0)";
 				else prevBtn.click();
 			}
@@ -457,7 +456,10 @@ function flashGallery(el, settings = {
 			else elmnt.style.transform = "translateX("+defaultTranslateX+")";
 
 			document.onmouseup = null;
+			document.ontouchend = null;
 			document.onmousemove = null;
+			document.ontouchmove = null;
+
 		}
 
 	}
@@ -551,33 +553,35 @@ function flashGalleryModalContainer(el, speed, playSpeed, infinite) {
 	// functions
 	function dragElement(elmnt) {
 
-		var defaultPos = 0;
-
-		var defaultTranslateX;
+		var defaultPos = 0, defaultTranslateX, lastClientX;
 
 		elmnt.onmousedown = dragMouseDown;
+		elmnt.ontouchstart = dragMouseDown;
 
 		function dragMouseDown(e) {
 
-		defaultTranslateX = elmnt.style.transform;
-		defaultTranslateX = defaultTranslateX.slice(11, defaultTranslateX.length - 1);
-
-		elmnt.onmousedown = dragMouseDown;
+			defaultTranslateX = elmnt.style.transform;
+			defaultTranslateX = defaultTranslateX.slice(11, defaultTranslateX.length - 1);
 
 			e = e || window.event;
 			e.preventDefault();
-			defaultPos = e.clientX;
+			defaultPos = e.clientX || e.touches[0].clientX;
+			
 			document.onmouseup = closeDragElement;
+			document.ontouchend = closeDragElement;
+
 			document.onmousemove = elementDrag;
+			document.ontouchmove = elementDrag;
 
 		}
 
 		function elementDrag(e) {
 
 			e = e || window.event;
-			e.preventDefault();
-			pos = e.clientX - defaultPos;
+			pos = e.clientX || e.touches[0].clientX;
+			pos -= defaultPos;
 			elmnt.style.transform = "translateX(calc("+defaultTranslateX+" + "+pos+"px)"; 
+			lastClientX = e.clientX || e.touches[0].clientX;
 
 		}
 
@@ -586,12 +590,12 @@ function flashGalleryModalContainer(el, speed, playSpeed, infinite) {
 			e = e || window.event;
 			e.preventDefault();
 
-			if (e.clientX < defaultPos - 80) { 
+			if (lastClientX < defaultPos - 80) { 
 				if (index == 0) elmnt.style.transform = "translateX("+defaultTranslateX+")";
 				else nextBtn.click();
 			}
 
-			else if (e.clientX > defaultPos + 80) { 
+			else if (lastClientX > defaultPos + 80) { 
 				if (prevIndex == lastIndex) elmnt.style.transform = "translateX(0)";
 				else prevBtn.click();
 			}
@@ -599,7 +603,10 @@ function flashGalleryModalContainer(el, speed, playSpeed, infinite) {
 			else elmnt.style.transform = "translateX("+defaultTranslateX+")";
 
 			document.onmouseup = null;
+			document.ontouchend = null;
 			document.onmousemove = null;
+			document.ontouchmove = null;
+
 		}
 
 	}
