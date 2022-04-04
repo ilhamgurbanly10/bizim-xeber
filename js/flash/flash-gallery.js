@@ -305,11 +305,13 @@ function flashGallery(el, settings = {
 		 	
 			imageContainers[i] = flashCreateElement("DIV","", {
 				class: "fl-gallery-modal-img-con",
+				draggable: "false"
 			}, modalImagesMainCon, "last-child");
 
 			flashCreateElement("IMG","", {
 				class: "fl-gallery-modal-img",
-				src: ""+images[i].querySelector('.fl-gallery-img').src+""
+				src: ""+images[i].querySelector('.fl-gallery-img').src+"",
+				draggable: "false"
 			}, imageContainers[i], "last-child");
 
 		 }
@@ -416,7 +418,6 @@ function flashGallery(el, settings = {
 			defaultTranslateX = defaultTranslateX.slice(11, defaultTranslateX.length - 1);
 
 			e = e || window.event;
-			e.preventDefault();
 
 			defaultPos = e.clientX || e.touches[0].clientX;
 			
@@ -441,24 +442,28 @@ function flashGallery(el, settings = {
 		function closeDragElement(e) {
 
 			e = e || window.event;
-			e.preventDefault();
 
-			if (lastClientX < defaultPos - 80) { 
-				if (index == 0) elmnt.style.transform = "translateX("+defaultTranslateX+")";
-				else nextBtn.click();
-			}
+			if (lastClientX != null) {
 
-			else if (lastClientX > defaultPos + 80) { 
-				if (prevIndex == lastIndex) elmnt.style.transform = "translateX(0)";
-				else prevBtn.click();
-			}
+				if (lastClientX < defaultPos - 80) { 
+					if (index == 0) elmnt.style.transform = "translateX("+defaultTranslateX+")";
+					else nextBtn.click();
+				}
 
-			else elmnt.style.transform = "translateX("+defaultTranslateX+")";
+				else if (lastClientX > defaultPos + 80) { 
+					if (prevIndex == lastIndex) elmnt.style.transform = "translateX(0)";
+					else prevBtn.click();
+				}
+
+				else elmnt.style.transform = "translateX("+defaultTranslateX+")";
+
+			}	
 
 			document.onmouseup = null;
 			document.ontouchend = null;
 			document.onmousemove = null;
 			document.ontouchmove = null;
+			lastClientX = null;
 
 		}
 
@@ -564,7 +569,7 @@ function flashGalleryModalContainer(el, speed, playSpeed, infinite) {
 			defaultTranslateX = defaultTranslateX.slice(11, defaultTranslateX.length - 1);
 
 			e = e || window.event;
-			e.preventDefault();
+
 			defaultPos = e.clientX || e.touches[0].clientX;
 			
 			document.onmouseup = closeDragElement;
@@ -578,6 +583,7 @@ function flashGalleryModalContainer(el, speed, playSpeed, infinite) {
 		function elementDrag(e) {
 
 			e = e || window.event;
+			
 			pos = e.clientX || e.touches[0].clientX;
 			pos -= defaultPos;
 			elmnt.style.transform = "translateX(calc("+defaultTranslateX+" + "+pos+"px)"; 
@@ -588,24 +594,28 @@ function flashGalleryModalContainer(el, speed, playSpeed, infinite) {
 		function closeDragElement(e) {
 
 			e = e || window.event;
-			e.preventDefault();
 
-			if (lastClientX < defaultPos - 80) { 
-				if (index == 0) elmnt.style.transform = "translateX("+defaultTranslateX+")";
-				else nextBtn.click();
-			}
+			if (lastClientX != null) {
 
-			else if (lastClientX > defaultPos + 80) { 
-				if (prevIndex == lastIndex) elmnt.style.transform = "translateX(0)";
-				else prevBtn.click();
-			}
+				if (lastClientX < defaultPos - 80) { 
+					if (index == 0) elmnt.style.transform = "translateX("+defaultTranslateX+")";
+					else nextBtn.click();
+				}
 
-			else elmnt.style.transform = "translateX("+defaultTranslateX+")";
+				else if (lastClientX > defaultPos + 80) { 
+					if (prevIndex == lastIndex) elmnt.style.transform = "translateX(0)";
+					else prevBtn.click();
+				}
+
+				else elmnt.style.transform = "translateX("+defaultTranslateX+")";
+
+			}	
 
 			document.onmouseup = null;
 			document.ontouchend = null;
 			document.onmousemove = null;
 			document.ontouchmove = null;
+			lastClientX = null;
 
 		}
 
